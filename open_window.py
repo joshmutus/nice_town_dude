@@ -9,6 +9,7 @@ import arcade
 WINDOW_WIDTH = 320
 WINDOW_HEIGHT = 240
 WINDOW_TITLE = "Strong Town"
+MOVEMENT_SPEED = 5
 
 
 class Player(arcade.Sprite):
@@ -16,18 +17,53 @@ class Player(arcade.Sprite):
         super().__init__(texture_list[0])
         self.textures = texture_list
         self.time_elapsed = 0
+        self.cur_texture_index = 0
+        self.face_down = list(range(6))
+        self.face_right = list(range(6,12))
+        self.face_up = list(range(12,18))
+        self.face_left = list(range(18,24))
+        self.curr_texture_list = []
+    
+    def iterate_texture(self) -> None:
+        self.set_texture(self.cur_texture_index)
+        print(self.cur_texture_index)
+        if self.cur_texture_index < self.curr_texture_list[0]:
+            self.cur_texture_index = self.curr_texture_list[0]
+        elif self.cur_texture_index > self.curr_texture_list[-1]-1:
+            self.cur_texture_index = self.curr_texture_list[0]
+        else:
+            self.cur_texture_index += 1
+
+        # self.set_texture(texture_list[0])
+        # if self.time_elapsed > 0.1:
+        #     if self.cur_texture_index < len(self.textures):
+        #         self.set_texture(self.cur_texture_index)  
+        #         self.cur_texture_index += 1  
+        #     self.time_elapsed = 0
+
+        # if self.cur_texture_index == 5:
+        #     self.cur_texture_index = 0
 
     def update(self, delta_time = 1 / 60, *args, **kwargs) -> None:
         self.time_elapsed += delta_time 
-
         if self.time_elapsed > 0.1:
-            if self.cur_texture_index < len(self.textures):
-                self.set_texture(self.cur_texture_index)  
-                self.cur_texture_index += 1  
+            self.iterate_texture()
             self.time_elapsed = 0
 
-        if self.cur_texture_index == 23:
-            self.cur_texture_index = 0
+        # Move player.
+        if self.change_x > 0:
+            self.curr_texture_list = self.face_right
+        elif self.change_x < 0:
+            self.curr_texture_list = self.face_left
+        elif self.change_y > 0:
+            self.curr_texture_list = self.face_up
+        else:
+            # print("move down")
+            self.curr_texture_list = self.face_down
+        print(self.curr_texture_list)
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
 
 class GameView(arcade.Window):
     """
@@ -40,8 +76,8 @@ class GameView(arcade.Window):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.sprite_list = arcade.SpriteList()
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
-        char_sheet  = arcade.load_spritesheet("assets/player/player_actions.png")
-        self.texture_list = char_sheet.get_texture_grid(size=(48,48), columns=2, count=24)
+        char_sheet  = arcade.load_spritesheet("assets/player/player.png")
+        self.texture_list = char_sheet.get_texture_grid(size=(32,32), columns=6, count=36)
         print("TEXTURE LEN: ", len(self.texture_list))
         self.player = Player(self.texture_list)
         self.player.position = 200,200
@@ -65,6 +101,31 @@ class GameView(arcade.Window):
 
     def on_update(self, delta_time: float) -> None:
         self.sprite_list.update() 
+
+    def on_key_press(self, key, modifiers):
+        """Called whenever a key is pressed. """
+
+        # If the player presses a key, update the speed
+        if key == arcade.key.UP:
+            self.player.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.player.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.player.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.player.change_x = MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+        """Called when the user releases a key. """
+
+        # If a player releases a key, zero out the speed.
+        # This doesn't work well if multiple keys are pressed.
+        # Use 'better move by keyboard' example if you need to
+        # handle this.
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.player.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.player.change_x = 0
 
 
 def main():
