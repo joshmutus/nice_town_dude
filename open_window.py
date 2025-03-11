@@ -73,10 +73,12 @@ class GameView(arcade.Window):
         self.player = Player(self.texture_list)
         self.player.position = 200,200
         self.sprite_list.append(self.player)
-        self.bottom_text = "foo"
+        self.bottom_text = ''
         self.town = Town(population=1, money=100, happiness=10, jank=10, things=[])
         self.build_list = buildable_list
         self.build_idx = 0
+        arcade.draw_rect_filled(arcade.rect.XYWH(100, 100, 30, 30),
+                                arcade.csscolor.BLACK, 0)
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -88,16 +90,12 @@ class GameView(arcade.Window):
     def on_draw(self):
         """Render the screen."""
 
-        # The clear method should always be called at the start of on_draw.
-        # It clears the whole screen to whatever the background color is
-        # set to. This ensures that you have a clean slate for drawing each
-        # frame of the game.
         self.clear()
         self.sprite_list.sort(key=lambda x: x.bottom, reverse=True)    
         self.sprite_list.draw()
         self.update_text()
         arcade.draw_text(self.bottom_text,10,10, arcade.color.DUTCH_WHITE)
-
+        self.draw_grid(50)
 
 
     def on_update(self, delta_time: float) -> None:
@@ -141,6 +139,15 @@ class GameView(arcade.Window):
         self.sprite_list.append(thing)
         self.town.money -= thing_to_build.cost
         self.town.things.append(thing_to_build)
+
+    def draw_grid(self, size):
+        print("drawing grid")
+        for a in range(10):
+            for b in range(10):
+                print(a,b)
+                arcade.draw_lbwh_rectangle_outline(a*size,b*size,size,size,arcade.csscolor.WHEAT,border_width=2)
+
+
 
 
 def main():
