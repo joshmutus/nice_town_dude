@@ -1,10 +1,6 @@
-"""
-Platformer Game
-
-python -m arcade.examples.platform_tutorial.01_open_window
-"""
 import arcade
 from town import Town, buildable_list
+from graphics_helpers import Grid
 
 # Constants
 WINDOW_WIDTH = 640
@@ -64,6 +60,7 @@ class GameView(arcade.Window):
     def __init__(self):
 
         # Call the parent class to set up the window
+        print("init GameView")
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.sprite_list = arcade.SpriteList()
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
@@ -71,14 +68,14 @@ class GameView(arcade.Window):
         self.draw_order = []
         self.texture_list = char_sheet.get_texture_grid(size=(32,32), columns=6, count=36)
         self.player = Player(self.texture_list)
-        self.player.position = 200,200
+        self.player.position = 220,220
         self.sprite_list.append(self.player)
         self.bottom_text = ''
         self.town = Town(population=1, money=100, happiness=10, jank=10, things=[])
         self.build_list = buildable_list
         self.build_idx = 0
-        arcade.draw_rect_filled(arcade.rect.XYWH(100, 100, 30, 30),
-                                arcade.csscolor.BLACK, 0)
+        self.grid_list = arcade.SpriteList()
+        self.grid = Grid(size=20, sprite_list=self.grid_list)
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -93,13 +90,19 @@ class GameView(arcade.Window):
         self.clear()
         self.sprite_list.sort(key=lambda x: x.bottom, reverse=True)    
         self.sprite_list.draw()
+        self.grid_list.draw()
         self.update_text()
         arcade.draw_text(self.bottom_text,10,10, arcade.color.DUTCH_WHITE)
-        self.draw_grid(50)
 
 
     def on_update(self, delta_time: float) -> None:
         self.sprite_list.update() 
+        collisions = arcade.check_for_collision_with_list(self.player, self.grid.sprite_list)
+            
+        if collisions:
+            print(f"Collision! {collisions}")
+            collisions[0].change_grid_color()
+
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -139,16 +142,6 @@ class GameView(arcade.Window):
         self.sprite_list.append(thing)
         self.town.money -= thing_to_build.cost
         self.town.things.append(thing_to_build)
-
-    def draw_grid(self, size):
-        print("drawing grid")
-        for a in range(10):
-            for b in range(10):
-                print(a,b)
-                arcade.draw_lbwh_rectangle_outline(a*size,b*size,size,size,arcade.csscolor.WHEAT,border_width=2)
-
-
-
 
 def main():
     """Main function"""
