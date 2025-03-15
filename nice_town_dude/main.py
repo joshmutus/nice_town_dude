@@ -32,6 +32,7 @@ class GameView(arcade.Window):
         self.town = Town(population=1, money=100, happiness=10, jank=10, things=[])
         self.build_list = buildable_list
         self.build_idx = 0
+        self.show_grid = False
         self.grid_list = arcade.SpriteList()
         self.grid = Grid(size=20, sprite_list=self.grid_list)
 
@@ -48,7 +49,8 @@ class GameView(arcade.Window):
         self.clear()
         self.sprite_list.sort(key=lambda x: x.bottom, reverse=True)    
         self.sprite_list.draw()
-        self.grid_list.draw()
+        if self.show_grid:
+            self.grid_list.draw()
         self.update_text()
         arcade.draw_text(self.bottom_text,10,10, arcade.color.DUTCH_WHITE)
 
@@ -73,7 +75,7 @@ class GameView(arcade.Window):
         elif key == arcade.key.RIGHT:
             self.player.change_x = MOVEMENT_SPEED
         if key == arcade.key.A:
-            self.build_thing(location=self.player.position)
+            self.show_grid = True
         if key == arcade.key.F:
             self.build_idx += 1
             self.build_idx = self.build_idx%len(self.build_list)
@@ -89,6 +91,10 @@ class GameView(arcade.Window):
             self.player.change_y = 0
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player.change_x = 0
+
+        if key == arcade.key.A:
+            self.build_thing(location=self.player.position)
+            self.show_grid = False
     
     def build_thing(self, location: tuple[int, int]):
         thing_to_build = self.build_list[self.build_idx]
