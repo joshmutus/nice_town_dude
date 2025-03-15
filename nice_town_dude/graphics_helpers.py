@@ -11,9 +11,7 @@ import numpy as np
 import arcade
 from arcade.texture import (
     ImageData,
-    Texture,
-    make_circle_texture,
-    make_soft_circle_texture,
+    Texture
 )
 from arcade.types import RGBA255, Color
 from arcade.types.rect import Rect
@@ -27,10 +25,7 @@ class Grid:
         size = self.size
         for a in range(50):
             for b in range(50):
-                # arcade.draw_lbwh_rectangle_outline(a*size,b*size,size,size,arcade.csscolor.WHEAT,border_width=2)
-                # g = GridSquare.from_grid_lbs(a*size,b*size,size)
                 self.sprite_list.append(SpriteOutline(width=size, height=size,center_x=(size+2)*a,center_y=(size+2)*b+50))
-                # self.sprite_list.append(SquareOutlineSprite(left=size*a, bottom=size*b, width=size, border_width=1, color=arcade.color.WHITE))
 
     def give_list(self):
         return(self.sprite_list)

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import arcade
 
 @dataclass
 class CharSheet:
@@ -7,21 +6,6 @@ class CharSheet:
     path: str
     columns: int
     count: int
-
-class Building(arcade.Sprite):     
-    """Sprite for buildings."""      
-    def __init__(self, char_sheet_spec: CharSheet, path_or_texture = None, scale = 1, center_x = 0, center_y = 0, angle = 0, **kwargs):
-        super().__init__(path_or_texture, scale, center_x, center_y, angle, **kwargs)        
-        char_sheet  = arcade.load_spritesheet(char_sheet_spec.path)
-        self.texture_list = char_sheet.get_texture_grid(size=(32,32), columns=char_sheet_spec.columns, count=char_sheet_spec.count)
-        self.texture = self.texture_list[0]
-        self.cleanliness = 0
-    
-    def increment_cleanliness(self):
-        self.cleanliness += 1
-
-    def reset_cleanliness(self):
-        self.cleanliness = 0
 
 @dataclass
 class Buildable:

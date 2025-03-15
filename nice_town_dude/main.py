@@ -1,13 +1,15 @@
 import arcade
-from town import Town, buildable_list, Building
+from town import Town, buildable_list, CharSheet
 from graphics_helpers import Grid
-from custom_sprites import Player
+from custom_sprites import Player, Building
 
 # Constants
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
 WINDOW_TITLE = "Nice Town, Dude"
 MOVEMENT_SPEED = 5
+BASE_TILE_SIZE = 32
+SCALE = 1 
 
 class GameView(arcade.Window):
     """
@@ -21,10 +23,9 @@ class GameView(arcade.Window):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.sprite_list = arcade.SpriteList()
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
-        char_sheet  = arcade.load_spritesheet("assets/player/player.png")
+        player_sheet = CharSheet(path='assets/player/player.png', columns=6, count=36)
         self.draw_order = []
-        self.texture_list = char_sheet.get_texture_grid(size=(32,32), columns=6, count=36)
-        self.player = Player(self.texture_list)
+        self.player = Player(player_sheet, size=BASE_TILE_SIZE)
         self.player.position = 220,220
         self.sprite_list.append(self.player)
         self.bottom_text = ''
