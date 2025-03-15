@@ -1,54 +1,13 @@
 import arcade
 from town import Town, buildable_list, Building
 from graphics_helpers import Grid
+from custom_sprites import Player
 
 # Constants
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
 WINDOW_TITLE = "Nice Town, Dude"
 MOVEMENT_SPEED = 5
-
-
-class Player(arcade.Sprite):
-    def __init__(self, texture_list: list[arcade.Texture]):
-        super().__init__(texture_list[0])
-        self.textures = texture_list
-        self.time_elapsed = 0
-        self.cur_texture_index = 0
-        self.face_down = list(range(6))
-        self.face_right = list(range(6,12))
-        self.face_up = list(range(12,18))
-        self.face_left = list(range(18,24))
-        self.curr_texture_list = []
-    
-    def iterate_texture(self) -> None:
-        self.set_texture(self.cur_texture_index)
-        if self.cur_texture_index < self.curr_texture_list[0]:
-            self.cur_texture_index = self.curr_texture_list[0]
-        elif self.cur_texture_index > self.curr_texture_list[-1]-1:
-            self.cur_texture_index = self.curr_texture_list[0]
-        else:
-            self.cur_texture_index += 1
-
-    def update(self, delta_time = 1 / 60, *args, **kwargs) -> None:
-        self.time_elapsed += delta_time 
-        if self.time_elapsed > 0.1:
-            self.iterate_texture()
-            self.time_elapsed = 0
-
-        # Move player.
-        if self.change_x > 0:
-            self.curr_texture_list = self.face_right
-        elif self.change_x < 0:
-            self.curr_texture_list = self.face_left
-        elif self.change_y > 0:
-            self.curr_texture_list = self.face_up
-        else:
-            self.curr_texture_list = self.face_down
-        self.center_x += self.change_x
-        self.center_y += self.change_y
-    
-
 
 class GameView(arcade.Window):
     """
