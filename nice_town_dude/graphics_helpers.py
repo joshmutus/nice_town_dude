@@ -25,12 +25,11 @@ class Grid:
     
     def __post_init__(self):
         size = self.size
-        for a in range(5):
-            for b in range(5):
-                print(a,b)
+        for a in range(50):
+            for b in range(50):
                 # arcade.draw_lbwh_rectangle_outline(a*size,b*size,size,size,arcade.csscolor.WHEAT,border_width=2)
                 # g = GridSquare.from_grid_lbs(a*size,b*size,size)
-                self.sprite_list.append(SpriteOutline(width=size, height=size,center_x=(size+2)*a,center_y=(size+2)*b))
+                self.sprite_list.append(SpriteOutline(width=size, height=size,center_x=(size+2)*a,center_y=(size+2)*b+50))
                 # self.sprite_list.append(SquareOutlineSprite(left=size*a, bottom=size*b, width=size, border_width=1, color=arcade.color.WHITE))
 
     def give_list(self):
@@ -78,6 +77,7 @@ class SpriteOutline(arcade.Sprite):
             center_y=center_y,
             angle=angle,
         )
+        self.default_texture = self.texture
         self.color = Color.from_iterable(color)
         self.collision_texture = arcade.Texture(self.create_on_collision_image(),
                                                 hit_box_points=(
@@ -120,11 +120,14 @@ class SpriteOutline(arcade.Sprite):
     def change_grid_color(self):
         self.texture = self.collision_texture
     
+    def reset_texture(self):
+        self.texture = self.default_texture
+    
     def create_on_collision_image(self) -> ImageData:
         im_array = create_square_border_array(32, border_width=2, border_color=(255,0,0,255))
         im = ImageData(
                 PIL.Image.fromarray(im_array),
-                hash="sprite_outline_2",
+                hash="sprite_outline_highlight",
             )
         return im
     

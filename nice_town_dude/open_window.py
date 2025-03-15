@@ -1,5 +1,5 @@
 import arcade
-from town import Town, buildable_list
+from town import Town, buildable_list, Building
 from graphics_helpers import Grid
 
 # Constants
@@ -20,11 +20,9 @@ class Player(arcade.Sprite):
         self.face_up = list(range(12,18))
         self.face_left = list(range(18,24))
         self.curr_texture_list = []
-
     
     def iterate_texture(self) -> None:
         self.set_texture(self.cur_texture_index)
-        # print(self.cur_texture_index)
         if self.cur_texture_index < self.curr_texture_list[0]:
             self.cur_texture_index = self.curr_texture_list[0]
         elif self.cur_texture_index > self.curr_texture_list[-1]-1:
@@ -94,15 +92,13 @@ class GameView(arcade.Window):
         self.update_text()
         arcade.draw_text(self.bottom_text,10,10, arcade.color.DUTCH_WHITE)
 
-
     def on_update(self, delta_time: float) -> None:
         self.sprite_list.update() 
         collisions = arcade.check_for_collision_with_list(self.player, self.grid.sprite_list)
-            
+        for grid in self.grid.sprite_list:
+            grid.reset_texture()
         if collisions:
-            print(f"Collision! {collisions}")
-            collisions[0].change_grid_color()
-
+            [cell.change_grid_color() for cell in collisions]
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -116,7 +112,6 @@ class GameView(arcade.Window):
             self.player.change_x = -MOVEMENT_SPEED
         elif key == arcade.key.RIGHT:
             self.player.change_x = MOVEMENT_SPEED
-
         if key == arcade.key.A:
             self.build_thing(location=self.player.position)
         if key == arcade.key.F:
@@ -137,7 +132,7 @@ class GameView(arcade.Window):
     
     def build_thing(self, location: tuple[int, int]):
         thing_to_build = self.build_list[self.build_idx]
-        thing = arcade.Sprite(thing_to_build.image_path)
+        thing = Building(char_sheet_spec=thing_to_build.character_sheet)
         thing.position = location
         self.sprite_list.append(thing)
         self.town.money -= thing_to_build.cost
@@ -148,7 +143,6 @@ def main():
     window = GameView()
     window.setup()
     arcade.run()
-
 
 if __name__ == "__main__":
     main()

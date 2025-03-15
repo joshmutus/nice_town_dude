@@ -1,4 +1,4 @@
-import graphics_helpers as gh
+import nice_town_dude.graphics_helpers as gh
 import numpy as np
 from numpy.testing import assert_array_equal
 
