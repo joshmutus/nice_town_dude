@@ -25,7 +25,7 @@ class GameView(arcade.Window):
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
         player_sheet = CharSheet(path='assets/player/player.png', columns=6, count=36)
         self.draw_order = []
-        self.player = Player(player_sheet, size=BASE_TILE_SIZE)
+        self.player = Player(player_sheet, size=BASE_TILE_SIZE, scale=SCALE)
         self.player.position = 220,220
         self.sprite_list.append(self.player)
         self.bottom_text = ''
@@ -92,7 +92,7 @@ class GameView(arcade.Window):
     
     def build_thing(self, location: tuple[int, int]):
         thing_to_build = self.build_list[self.build_idx]
-        thing = Building(char_sheet_spec=thing_to_build.character_sheet)
+        thing = Building(char_sheet_spec=thing_to_build.character_sheet, scale=SCALE)
         thing.position = location
         self.sprite_list.append(thing)
         self.town.money -= thing_to_build.cost

@@ -9,7 +9,6 @@ from arcade.types import RGBA255, Color
 from arcade.types.rect import Rect
 from weakref import WeakValueDictionary
 
-
 import PIL
 import PIL.Image
 import numpy as np
@@ -22,18 +21,26 @@ class Building(arcade.Sprite):
         super().__init__(path_or_texture, scale, center_x, center_y, angle, **kwargs)        
         char_sheet  = arcade.load_spritesheet(char_sheet_spec.path)
         self.texture_list = char_sheet.get_texture_grid(size=(size, size), columns=char_sheet_spec.columns, count=char_sheet_spec.count)
-        self.texture = self.texture_list[0]
-        self.cleanliness = 0
+        self.dirty = 0
+        self.texture = self.texture_list[self.dirty]
     
-    def increment_cleanliness(self):
-        self.cleanliness += 1
+    def increase_dirt(self):
+        if self.dirty < len(self.texture_list) - 1:
+            self.dirty += 1
+            self.texture = self.texture_list[self.dirty]
 
-    def reset_cleanliness(self):
-        self.cleanliness = 0
+    def decrease_dirt(self):
+        if self.dirty > 0:
+            self.dirty -= 1
+            self.texture = self.texture_list[self.dirty]
+
+    def reset_dirt(self):
+        self.dirty = 0
+        self.texture = self.texture_list[self.dirty]
 
 class Player(arcade.Sprite):
-    def __init__(self, char_sheet_spec: CharSheet, size=32):
-        super().__init__()
+    def __init__(self, char_sheet_spec: CharSheet, size=32, path_or_texture = None, scale = 1, center_x = 0, center_y = 0, angle = 0, **kwargs):
+        super().__init__(path_or_texture, scale, center_x, center_y, angle, **kwargs)    
         char_sheet  = arcade.load_spritesheet(char_sheet_spec.path)
         texture_list = char_sheet.get_texture_grid(size=(size, size), columns=char_sheet_spec.columns, count=char_sheet_spec.count)
         self.textures = texture_list
