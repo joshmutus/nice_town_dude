@@ -24,7 +24,6 @@ class Town:
     jank: float
     things: list[Buildable]
 
-
 house = Buildable(name='house', cost=10, upkeep=10, character_sheet=CharSheet(path="assets/outdoor/house_small.png", 
                                                                               columns=2, 
                                                                               count=6))

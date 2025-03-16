@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from nice_town_dude.town import CharSheet
+
 import arcade
 from arcade.texture import (
     ImageData,
@@ -12,8 +14,6 @@ from weakref import WeakValueDictionary
 import PIL
 import PIL.Image
 import numpy as np
-
-from town import CharSheet
 
 class Building(arcade.Sprite):     
     """Sprite for buildings."""      

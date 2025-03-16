@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 
-from custom_sprites import SpriteOutline
+from nice_town_dude.custom_sprites import SpriteOutline
 import arcade
 
 

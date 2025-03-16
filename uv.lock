@@ -96,6 +96,17 @@ wheels = [
 ]
 
 [[package]]
+name = "nice-town-dude"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "arcade" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "arcade", specifier = ">=3.0.1" }]
+
+[[package]]
 name = "pillow"
 version = "11.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -258,17 +269,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/79/62/0d8a2220ee0747522
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d7/f7/6b6c51b50ed8681a31146e5e7ac325b78fe776ff48b1ec8f56d7e4995d72/pytiled_parser-2.2.9-py2.py3-none-any.whl", hash = "sha256:37f73d31950bf4d02ee3bda59f3d6123c55194dc8d8e876821dd2080af5f1f91", size = 44452 },
 ]
-
-[[package]]
-name = "strongtown"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "arcade" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "arcade", specifier = ">=3.0.1" }]
 
 [[package]]
 name = "typing-extensions"

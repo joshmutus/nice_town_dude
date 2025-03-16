@@ -1,7 +1,7 @@
 import arcade
-from town import Town, buildable_list, CharSheet
-from graphics_helpers import Grid
-from custom_sprites import Player, Building
+from nice_town_dude.town import Town, buildable_list, CharSheet
+from nice_town_dude.graphics_helpers import Grid
+from nice_town_dude.custom_sprites import Player, Building
 
 # Constants
 WINDOW_WIDTH = 640
@@ -103,12 +103,3 @@ class GameView(arcade.Window):
         self.sprite_list.append(thing)
         self.town.money -= thing_to_build.cost
         self.town.things.append(thing_to_build)
-
-def main():
-    """Main function"""
-    window = GameView()
-    window.setup()
-    arcade.run()
-
-if __name__ == "__main__":
-    main()
