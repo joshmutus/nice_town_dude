@@ -78,6 +78,27 @@ class Player(arcade.Sprite):
             self.curr_texture_list = self.face_down
         self.center_x += self.change_x
         self.center_y += self.change_y
+
+class InvisibleCollisionSprite(arcade.Sprite):
+    def __init__(self, width: int, height: int, center_x: float = 0, center_y: float = 0, **kwargs):
+        texture = Texture(
+            ImageData(
+                PIL.Image.new("RGBA", (width, height), (0, 0, 0, 0)),
+                hash="invisible_collision",
+            ),
+            hit_box_points=(
+                (-width / 2, -height / 2),
+                (width / 2, -height / 2),
+                (width / 2, height / 2),
+                (-width / 2, height / 2),
+            ),
+        )
+        texture.size = width, height
+        super().__init__(
+            texture,
+            center_x=center_x,
+            center_y=center_y,
+        )                           
     
 class SpriteOutline(arcade.Sprite):
     """Copied and modified from SpriteSolid. Probably lots of cruft to remove"""

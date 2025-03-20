@@ -1,7 +1,7 @@
 import arcade
 from nice_town_dude.town import Town, buildable_list, CharSheet
 from nice_town_dude.graphics_helpers import Grid
-from nice_town_dude.custom_sprites import Player, Building
+from nice_town_dude.custom_sprites import Player, Building, InvisibleCollisionSprite
 
 # Constants
 WINDOW_WIDTH = 640
@@ -10,7 +10,7 @@ WINDOW_TITLE = "Nice Town, Dude"
 MOVEMENT_SPEED = 5
 BASE_TILE_SIZE = 32
 SCALE = 2 
-GRID_SIZE = 32
+GRID_SIZE = 64
 
 class GameView(arcade.Window):
     """
@@ -27,7 +27,9 @@ class GameView(arcade.Window):
         player_sheet = CharSheet(path='assets/player/monster_construction_worker.png', columns=1, count=4)
         self.draw_order = []
         self.player = Player(player_sheet, size=BASE_TILE_SIZE, scale=1.2)
+        self.collision_sprite = InvisibleCollisionSprite(width=1,height=1)
         self.player.position = 220,220
+        self.collision_sprite.position = self.player.position
         self.sprite_list.append(self.player)
         self.bottom_text = ''
         self.town = Town(population=1, money=100, happiness=10, jank=10, things=[])
@@ -56,8 +58,10 @@ class GameView(arcade.Window):
         arcade.draw_text(self.bottom_text,10,10, arcade.color.DUTCH_WHITE)
 
     def on_update(self, delta_time: float) -> None:
+        self.collision_sprite.position = self.player.position
+        print(self.collision_sprite.position)
         self.sprite_list.update() 
-        collisions = arcade.check_for_collision_with_list(self.player, self.grid.sprite_list)
+        collisions = arcade.check_for_collision_with_list(self.collision_sprite, self.grid.sprite_list)
         for grid in self.grid.sprite_list:
             grid.reset_texture()
         if collisions:
@@ -80,6 +84,8 @@ class GameView(arcade.Window):
         if key == arcade.key.F:
             self.build_idx += 1
             self.build_idx = self.build_idx%len(self.build_list)
+        print(self.player.hit_box.points)
+        print(self.player.hit_box.position)
             
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
