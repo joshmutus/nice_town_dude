@@ -1,4 +1,5 @@
 import arcade
+import numpy as np
 
 from nice_town_dude.town import Town, buildable_list, CharSheet, LandType
 from nice_town_dude.town_grid import Grid
@@ -42,7 +43,8 @@ class GameView(arcade.Window):
         self.build_idx = 0
         self.build_mode: bool = False
         self.grid_list = arcade.SpriteList()
-        self.grid = Grid(size=GRID_SIZE, sprite_list=self.grid_list)
+        self.grid = Grid(cell_size=GRID_SIZE, num_cells=(10, 10), sprite_list=self.grid_list)
+        print(np.shape(self.grid.grid_logic.grid_array))
         self.acitve_cell: tuple[int, int] = None
 
     def setup(self):
@@ -94,6 +96,8 @@ class GameView(arcade.Window):
         if key == arcade.key.F:
             self.build_idx += 1
             self.build_idx = self.build_idx % len(self.build_list)
+        if key == arcade.key.L:
+            self.grid.grid_logic.display_grid()
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key."""

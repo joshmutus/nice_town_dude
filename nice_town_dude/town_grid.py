@@ -7,14 +7,15 @@ from nice_town_dude.town import LandType
 
 @dataclass
 class Grid:
-    size: int
+    cell_size: int
+    num_cells: tuple[int, int]
     sprite_list: arcade.SpriteList
 
     def __post_init__(self):
-        size = self.size
-        self.grid_logic = TownGridLogic(grid_size=(size, size))
-        for a in range(size):
-            for b in range(size):
+        size = self.cell_size
+        self.grid_logic = TownGridLogic(grid_size=self.num_cells)
+        for a in range(self.num_cells[0]):
+            for b in range(self.num_cells[1]):
                 self.sprite_list.append(
                     SpriteOutline(
                         width=size,
@@ -33,7 +34,7 @@ class Grid:
 class TownGridLogic:
     """Thing for handling the logic of the town grid."""
 
-    grid_size: tuple[int, int] = (50, 50)
+    grid_size: tuple[int, int]
 
     def __post_init__(self):
         self.grid_array = np.full(self.grid_size, LandType.CLEAR)
@@ -61,4 +62,9 @@ class TownGridLogic:
     def reassign_tiles(
         self, bl: tuple[int, int], size: tuple[int, int], land_type: LandType
     ) -> None:
-        self.grid_array[bl[0] : bl[0] + size[0], bl[1] : bl[0] + size[0]] = land_type
+        self.grid_array[bl[0] : bl[0] + size[0], bl[1] : bl[1] + size[0]] = land_type
+
+    def display_grid(self):
+        grid_array_values = np.vectorize(lambda x: x.value)(self.grid_array)
+        np.set_printoptions(threshold=np.inf)
+        print(grid_array_values)

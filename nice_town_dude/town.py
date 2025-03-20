@@ -4,10 +4,10 @@ from enum import Enum
 
 class LandType(Enum):
     CLEAR = 0
-    GRASS = 1
-    TREE = 2
-    ROAD = 3
-    BUILDING = 4
+    BUILDING = 1
+    GRASS = 2
+    TREE = 3
+    ROAD = 4
 
 
 @dataclass
