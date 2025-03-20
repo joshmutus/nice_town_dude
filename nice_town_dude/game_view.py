@@ -1,6 +1,6 @@
 import arcade
 from nice_town_dude.town import Town, buildable_list, CharSheet
-from nice_town_dude.graphics_helpers import Grid
+from nice_town_dude.town_grid import Grid
 from nice_town_dude.custom_sprites import Player, Building, InvisibleCollisionSprite
 
 # Constants
@@ -35,9 +35,10 @@ class GameView(arcade.Window):
         self.town = Town(population=1, money=100, happiness=10, jank=10, things=[])
         self.build_list = buildable_list
         self.build_idx = 0
-        self.show_grid = False
+        self.build_mode: bool = False
         self.grid_list = arcade.SpriteList()
         self.grid = Grid(size=GRID_SIZE, sprite_list=self.grid_list)
+        self.acitve_cell: tuple[int, int] = None
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""
@@ -52,20 +53,22 @@ class GameView(arcade.Window):
         self.clear()
         self.sprite_list.sort(key=lambda x: x.bottom, reverse=True)    
         self.sprite_list.draw()
-        if self.show_grid:
+        if self.build_mode:
             self.grid_list.draw()
         self.update_text()
         arcade.draw_text(self.bottom_text,10,10, arcade.color.DUTCH_WHITE)
 
     def on_update(self, delta_time: float) -> None:
         self.collision_sprite.position = self.player.position
-        print(self.collision_sprite.position)
         self.sprite_list.update() 
-        collisions = arcade.check_for_collision_with_list(self.collision_sprite, self.grid.sprite_list)
-        for grid in self.grid.sprite_list:
-            grid.reset_texture()
-        if collisions:
-            [cell.change_grid_color() for cell in collisions]
+        if self.build_mode:
+            collisions = arcade.check_for_collision_with_list(self.collision_sprite, self.grid.sprite_list)
+            for grid in self.grid.sprite_list:
+                grid.reset_texture()
+            if collisions:
+                #implicity assumes a single grid cell is collided
+                self.acitve_cell = collisions[0].set_active_cell()
+                print(self.acitve_cell)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -80,12 +83,10 @@ class GameView(arcade.Window):
         elif key == arcade.key.RIGHT:
             self.player.change_x = MOVEMENT_SPEED
         if key == arcade.key.A:
-            self.show_grid = True
+            self.build_mode = True
         if key == arcade.key.F:
             self.build_idx += 1
             self.build_idx = self.build_idx%len(self.build_list)
-        print(self.player.hit_box.points)
-        print(self.player.hit_box.position)
             
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -100,13 +101,14 @@ class GameView(arcade.Window):
             self.player.change_x = 0
 
         if key == arcade.key.A:
-            self.build_thing(location=self.player.position)
-            self.show_grid = False
+            self.build_thing(grid_site=self.acitve_cell)
+            self.build_mode = False
     
-    def build_thing(self, location: tuple[int, int]):
+    def build_thing(self, grid_site: tuple[int, int]):
         thing_to_build = self.build_list[self.build_idx]
         thing = Building(char_sheet_spec=thing_to_build.character_sheet, scale=SCALE)
-        thing.position = location
+        thing.position = grid_site[0]*GRID_SIZE, grid_site[1]*GRID_SIZE
+        print(thing.position)
         self.sprite_list.append(thing)
         self.town.money -= thing_to_build.cost
         self.town.things.append(thing_to_build)

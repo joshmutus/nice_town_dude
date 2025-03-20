@@ -114,6 +114,7 @@ class SpriteOutline(arcade.Sprite):
         self,
         width: int,
         height: int,
+        grid_coord: tuple[int, int],
         center_x: float = 0,
         center_y: float = 0,
         color: RGBA255 = Color(255, 255, 255, 255),
@@ -151,22 +152,7 @@ class SpriteOutline(arcade.Sprite):
                                                     ),
                                                     )
         self.collision_texture.size = width, height
-
-    @classmethod
-    def from_rect(cls, rect: Rect, color: Color, angle: float = 0.0) -> SpriteOutline:
-        """
-        Construct a new SpriteSolidColor from a :py:class:`~arcade.types.rect.Rect`.
-
-        Args:
-            rect:
-                The rectangle to use for the sprite's dimensions and position.
-            color:
-                The color of the sprite as a :py:class:`~arcade.types.Color`,
-                an RGBA tuple, or an RGB tuple.
-            angle:
-                The angle of the sprite in degrees.
-        """
-        return cls(int(rect.width), int(rect.height), rect.x, rect.y, color, angle)
+        self.grid_coord = grid_coord
 
     def _get_default_image(self) -> ImageData:
         """Lazy-load the default image for this sprite type."""
@@ -180,9 +166,10 @@ class SpriteOutline(arcade.Sprite):
             self.__class__._default_image = im
         return im
     
-    def change_grid_color(self):
+    def set_active_cell(self):
         self.texture = self.collision_texture
-    
+        return self.grid_coord
+
     def reset_texture(self):
         self.texture = self.default_texture
     
