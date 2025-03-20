@@ -1,16 +1,8 @@
 import numpy as np
 import arcade
 from dataclasses import dataclass
-from enum import Enum
 from nice_town_dude.custom_sprites import SpriteOutline
-
-
-class LandType(Enum):
-    CLEAR = 0
-    GRASS = 1
-    TREE = 2
-    ROAD = 3
-    BUILDING = 4
+from nice_town_dude.town import LandType
 
 @dataclass
 class Grid:
@@ -19,15 +11,19 @@ class Grid:
 
     def __post_init__(self):  
         size = self.size
-        for a in range(50):
-            for b in range(50):
+        self.grid_logic = TownGridLogic(grid_size=(size,size))
+        for a in range(size):
+            for b in range(size):
                 self.sprite_list.append(SpriteOutline(width=size, height=size,center_x=(size)*a,center_y=(size)*b, grid_coord=(a,b)))
 
     def give_list(self):
         return(self.sprite_list)
+    
+    
 
 @dataclass
-class TownGrid:
+class TownGridLogic:
+    """Thing for handling the logic of the town grid."""
     grid_size: tuple[int, int] = (50, 50)
 
     def __post_init__(self):

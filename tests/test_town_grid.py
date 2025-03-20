@@ -1,8 +1,8 @@
-from nice_town_dude.town_grid import TownGrid, LandType
+from nice_town_dude.town_grid import TownGridLogic, LandType
 import numpy as np
 
 def test_town_grid():
-    tg = TownGrid(grid_size=(5,5))
+    tg = TownGridLogic(grid_size=(5,5))
     assert tg.grid_size == (5,5)
     assert np.all(tg.grid_array == LandType.CLEAR)
     assert tg.check_build_on_tiles((0,0),(5,5)) == True

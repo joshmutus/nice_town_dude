@@ -1,7 +1,9 @@
 import arcade
-from nice_town_dude.town import Town, buildable_list, CharSheet
+
+from nice_town_dude.town import Town, buildable_list, CharSheet, LandType
 from nice_town_dude.town_grid import Grid
 from nice_town_dude.custom_sprites import Player, Building, InvisibleCollisionSprite
+
 
 # Constants
 WINDOW_WIDTH = 640
@@ -52,7 +54,7 @@ class GameView(arcade.Window):
 
         self.clear()
         self.sprite_list.sort(key=lambda x: x.bottom, reverse=True)    
-        self.sprite_list.draw()
+        self.sprite_list.draw(pixelated=True)
         if self.build_mode:
             self.grid_list.draw()
         self.update_text()
@@ -106,9 +108,13 @@ class GameView(arcade.Window):
     
     def build_thing(self, grid_site: tuple[int, int]):
         thing_to_build = self.build_list[self.build_idx]
-        thing = Building(char_sheet_spec=thing_to_build.character_sheet, scale=SCALE)
-        thing.position = grid_site[0]*GRID_SIZE, grid_site[1]*GRID_SIZE
-        print(thing.position)
-        self.sprite_list.append(thing)
-        self.town.money -= thing_to_build.cost
-        self.town.things.append(thing_to_build)
+        if self.grid.grid_logic.check_build_on_tiles(grid_site, thing_to_build.grid_size):
+            print(f'empty tile found at: {grid_site}')
+            self.grid.grid_logic.reassign_tiles(grid_site, thing_to_build.grid_size, LandType.BUILDING)
+            thing = Building(char_sheet_spec=thing_to_build.character_sheet, scale=SCALE)
+            thing.position = grid_site[0]*GRID_SIZE, grid_site[1]*GRID_SIZE
+            self.sprite_list.append(thing)
+            self.town.money -= thing_to_build.cost
+            self.town.things.append(thing_to_build)
+        else:
+            pass
