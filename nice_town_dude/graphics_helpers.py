@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 
 from nice_town_dude.custom_sprites import SpriteOutline
+from nice_town_dude.town_grid import TownGrid
 import arcade
 
 
@@ -9,8 +10,8 @@ import arcade
 class Grid:
     size: int
     sprite_list: arcade.SpriteList
-    
-    def __post_init__(self):
+
+    def __post_init__(self):  
         size = self.size
         for a in range(50):
             for b in range(50):

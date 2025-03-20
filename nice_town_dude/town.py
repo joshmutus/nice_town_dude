@@ -13,6 +13,7 @@ class Buildable:
     name: str
     cost: int
     upkeep: int
+    grid_size: tuple[int, int]
     character_sheet: CharSheet
 
 @dataclass
@@ -24,16 +25,16 @@ class Town:
     jank: float
     things: list[Buildable]
 
-house = Buildable(name='house', cost=10, upkeep=10, character_sheet=CharSheet(path="assets/outdoor/house_small.png", 
+house = Buildable(name='house', cost=10, upkeep=10, grid_size=(2,2), character_sheet=CharSheet(path="assets/outdoor/house_small.png", 
                                                                               columns=2, 
                                                                               count=6))
-tree = Buildable(name='tree', cost=1, upkeep=0, character_sheet=CharSheet(path="assets/outdoor/oak_tree.png", 
+tree = Buildable(name='tree', cost=1, upkeep=0, grid_size=(2,2), character_sheet=CharSheet(path="assets/outdoor/oak_tree.png", 
                                                                           columns=1, 
                                                                           count=1))
-fountain = Buildable(name='fountain', cost=20, upkeep=10, character_sheet=CharSheet(path="assets/outdoor/fountain.png", 
+fountain = Buildable(name='fountain', cost=20, upkeep=10, grid_size=(2,2), character_sheet=CharSheet(path="assets/outdoor/fountain.png", 
                                                                                     columns=1,
                                                                                     count=1))
-hunting_shed = Buildable(name='hunting shed', cost=50, upkeep=5, character_sheet=CharSheet(path="assets/outdoor/hunting_shed.png", 
+hunting_shed = Buildable(name='hunting shed', cost=50, upkeep=5,grid_size=(2,2), character_sheet=CharSheet(path="assets/outdoor/hunting_shed.png", 
                                                                                            columns=1,
                                                                                            count=2))
 buildable_list = [house, tree, fountain, hunting_shed]

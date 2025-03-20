@@ -9,7 +9,8 @@ WINDOW_HEIGHT = 480
 WINDOW_TITLE = "Nice Town, Dude"
 MOVEMENT_SPEED = 5
 BASE_TILE_SIZE = 32
-SCALE = 1 
+SCALE = 2 
+GRID_SIZE = 32
 
 class GameView(arcade.Window):
     """
@@ -23,9 +24,9 @@ class GameView(arcade.Window):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.sprite_list = arcade.SpriteList()
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
-        player_sheet = CharSheet(path='assets/player/player.png', columns=6, count=36)
+        player_sheet = CharSheet(path='assets/player/monster_construction_worker.png', columns=1, count=4)
         self.draw_order = []
-        self.player = Player(player_sheet, size=BASE_TILE_SIZE, scale=SCALE)
+        self.player = Player(player_sheet, size=BASE_TILE_SIZE, scale=1.2)
         self.player.position = 220,220
         self.sprite_list.append(self.player)
         self.bottom_text = ''
@@ -34,7 +35,7 @@ class GameView(arcade.Window):
         self.build_idx = 0
         self.show_grid = False
         self.grid_list = arcade.SpriteList()
-        self.grid = Grid(size=20, sprite_list=self.grid_list)
+        self.grid = Grid(size=GRID_SIZE, sprite_list=self.grid_list)
 
     def setup(self):
         """Set up the game here. Call this function to restart the game."""

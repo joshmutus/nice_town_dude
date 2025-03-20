@@ -46,10 +46,10 @@ class Player(arcade.Sprite):
         self.textures = texture_list
         self.time_elapsed = 0
         self.cur_texture_index = 0
-        self.face_down = list(range(6))
-        self.face_right = list(range(6,12))
-        self.face_up = list(range(12,18))
-        self.face_left = list(range(18,24))
+        self.face_down = list(range(4))
+        self.face_right = list(range(4))
+        self.face_up = list(range(4))
+        self.face_left = list(range(4))
         self.curr_texture_list = []
     
     def iterate_texture(self) -> None:
@@ -63,7 +63,7 @@ class Player(arcade.Sprite):
 
     def update(self, delta_time = 1 / 60, *args, **kwargs) -> None:
         self.time_elapsed += delta_time 
-        if self.time_elapsed > 0.1:
+        if self.time_elapsed > 0.05:
             self.iterate_texture()
             self.time_elapsed = 0
 
