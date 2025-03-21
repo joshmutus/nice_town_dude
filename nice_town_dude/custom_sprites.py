@@ -6,6 +6,7 @@ import arcade
 from arcade.texture import ImageData, Texture
 from arcade.types import RGBA255, Color
 from arcade.types.rect import Rect
+import itertools
 from weakref import WeakValueDictionary
 
 import PIL
@@ -72,42 +73,35 @@ class Player(arcade.Sprite):
             count=char_sheet_spec.count,
         )
         self.textures = texture_list
+        self.set_texture(0)
         self.time_elapsed = 0
         self.cur_texture_index = 0
-        self.idle = [0]   
-        self.walk_down = [0,1,2,3,4,5,6]
-        self.walk_right = [11,12,13,14]
-        self.walk_up = [7,8,9,10]
-        self.walk_left = [15,16,17,18]
-        self.curr_texture_list = []
-        print(f'there are this many textures: {len(self.textures)}')
-
-    def iterate_texture(self) -> None:
-        self.set_texture(self.cur_texture_index)
-        if self.cur_texture_index < self.curr_texture_list[0]:
-            self.cur_texture_index = self.curr_texture_list[0]
-        elif self.cur_texture_index > self.curr_texture_list[-1] - 1:
-            self.cur_texture_index = self.curr_texture_list[0]
-        else:
-            self.cur_texture_index += 1
+        self.idle = itertools.cycle([0, 19, 20])
+        self.walk_down = itertools.cycle([0, 1, 2, 3, 4, 5, 6])
+        self.walk_right = itertools.cycle([11, 12, 13, 14])
+        self.walk_up = itertools.cycle([7, 8, 9, 10])
+        self.walk_left = itertools.cycle([15, 16, 17, 18])
+        self.curr_texture_iter = self.idle
+        print(f"there are this many textures: {len(self.textures)}")
 
     def update(self, delta_time=1 / 60, *args, **kwargs) -> None:
         self.time_elapsed += delta_time
         if self.time_elapsed > 0.05:
-            self.iterate_texture()
+            next_texture = next(self.curr_texture_iter)
+            self.set_texture(next_texture)
             self.time_elapsed = 0
 
         # Move player.
         if self.change_x > 0:
-            self.curr_texture_list = self.walk_right
+            self.curr_texture_iter = self.walk_right
         elif self.change_x < 0:
-            self.curr_texture_list = self.walk_left
+            self.curr_texture_iter = self.walk_left
         elif self.change_y > 0:
-            self.curr_texture_list = self.walk_up
+            self.curr_texture_iter = self.walk_up
         elif self.change_y < 0:
-            self.curr_texture_list = self.walk_down
+            self.curr_texture_iter = self.walk_down
         else:
-            self.curr_texture_list = self.idle
+            self.curr_texture_iter = self.idle
         self.center_x += self.change_x
         self.center_y += self.change_y
 

@@ -43,7 +43,9 @@ class GameView(arcade.Window):
         self.build_idx = 0
         self.build_mode: bool = False
         self.grid_list = arcade.SpriteList()
-        self.grid = Grid(cell_size=GRID_SIZE, num_cells=(10, 10), sprite_list=self.grid_list)
+        self.grid = Grid(
+            cell_size=GRID_SIZE, num_cells=(10, 10), sprite_list=self.grid_list
+        )
         print(np.shape(self.grid.grid_logic.grid_array))
         self.acitve_cell: tuple[int, int] = None
 
