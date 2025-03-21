@@ -74,11 +74,13 @@ class Player(arcade.Sprite):
         self.textures = texture_list
         self.time_elapsed = 0
         self.cur_texture_index = 0
-        self.face_down = list(range(4))
-        self.face_right = list(range(4))
-        self.face_up = list(range(4))
-        self.face_left = list(range(4))
+        self.idle = [0]   
+        self.walk_down = [0,1,2,3,4,5,6]
+        self.walk_right = [11,12,13,14]
+        self.walk_up = [7,8,9,10]
+        self.walk_left = [15,16,17,18]
         self.curr_texture_list = []
+        print(f'there are this many textures: {len(self.textures)}')
 
     def iterate_texture(self) -> None:
         self.set_texture(self.cur_texture_index)
@@ -97,13 +99,15 @@ class Player(arcade.Sprite):
 
         # Move player.
         if self.change_x > 0:
-            self.curr_texture_list = self.face_right
+            self.curr_texture_list = self.walk_right
         elif self.change_x < 0:
-            self.curr_texture_list = self.face_left
+            self.curr_texture_list = self.walk_left
         elif self.change_y > 0:
-            self.curr_texture_list = self.face_up
+            self.curr_texture_list = self.walk_up
+        elif self.change_y < 0:
+            self.curr_texture_list = self.walk_down
         else:
-            self.curr_texture_list = self.face_down
+            self.curr_texture_list = self.idle
         self.center_x += self.change_x
         self.center_y += self.change_y
 

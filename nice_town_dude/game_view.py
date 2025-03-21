@@ -29,10 +29,10 @@ class GameView(arcade.Window):
         self.sprite_list = arcade.SpriteList()
         self.background_color = arcade.csscolor.CORNFLOWER_BLUE
         player_sheet = CharSheet(
-            path="assets/player/monster_construction_worker.png", columns=1, count=4
+            path="assets/player/monster_construction_worker.png", columns=2, count=21
         )
         self.draw_order = []
-        self.player = Player(player_sheet, size=BASE_TILE_SIZE, scale=1.2)
+        self.player = Player(player_sheet, size=BASE_TILE_SIZE, scale=SCALE)
         self.collision_sprite = InvisibleCollisionSprite(width=1, height=1)
         self.player.position = 220, 220
         self.collision_sprite.position = self.player.position
